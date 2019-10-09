@@ -89,6 +89,8 @@ span {
   margin: 3% 3% 0 0;
 }
 </style>
+  <meta charset="utf-8">
+<div class="container">
   <h1>Incidentes cibernéticos</h1>
   <p>Variação dos incidentes de segurança cibernética do governo brasileiro, por categoria ao longo do tempo. A escala <strong>pode variar</strong> dependendo da categoria escolhida.</p>
   <span>Selecione uma categoria de incidente </span>
@@ -103,10 +105,10 @@ var margin = {
     top: 20,
     right: 20,
     bottom: 30,
-    left: 48
+    left: 48 
   },
   width = 600 - margin.left - margin.right,
-  height = 500 - margin.top - margin.bottom;
+  height = 400 - margin.top - margin.bottom;
 
 var parseDate = d3.time.format("%Y").parse;
 
