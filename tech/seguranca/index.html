@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>JS Bin</title>
+</head>
+<body>
+<meta charset="utf-8">
+<div class="container">
+<style>
+@import url('https://fonts.googleapis.com/css?family=Roboto:400,700&display=swap');
+
+body { 
+  font-family: 'Roboto', sans serif;
+  background-color: #ffffff;
+  color: #241f21;
+  font-size: 0.7em
+  }
+
+h1 {
+  font-family: 'Silva-Display', 'Roboto', sans serif;
+  margin-bottom: 0.3em;
+  font-size: 2em
+}
+
+p {
+  margin-top: 0;
+  font-weight: 300;
+  font-size: 1.5em;
+}
+
+h5, h6 {
+  font-weight: 300;
+}
+
+h5,h6{
+  font-family: 'Roboto', sans serif;
+  margin-top: -10px;
+  font-size: 1em;
+  color: #777
+}
+
+.container{
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+span {
+  color: #999999;
+  font-size: 1em;
+  font-weight: 400
+}
+
+.xAxis path,
+.yAxis path {
+  stroke: none;
+  fill: none;
+}
+
+.yAxis line {
+  fill: red;
+  stroke: #cbcbcb;
+  stroke-width: 1px;
+  stroke-dasharray: 3, 3
+}
+
+.xAxis line {
+}
+
+.line {
+  fill: none;
+  stroke: #adbd30;
+  stroke-width: 6px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  stroke-miterlimit: 2;
+  background-blend-mode: multiply;
+}
+
+.caixa {
+  border: 0px solid #222;
+  font-size: 13px;
+  height: 24px;
+  width: 50%;
+  background-color: #241f21;
+  color: #fff;
+  float: left;
+  margin: 3% 3% 0 0;
+}
+</style>
+  <h1>Incidentes cibernéticos</h1>
+  <p>Variação dos incidentes de segurança cibernética do governo brasileiro, por categoria ao longo do tempo. A escala <strong>pode variar</strong> dependendo da categoria escolhida.</p>
+  <span>Selecione uma categoria de incidente </span>
+<div id="chart" class="svg-container"></div>
+  <h5>Fonte: CTIR</h5>
+  <h6>Nota: Incidentes são notificações que, após processo de triagem, são caracterizadas como evento adverso, confirmado ou sob suspeita, relacionado à segurança dos sistemas de computação ou das redes de computadores.</h6>
+</div>
+<script src="https://cdn.rawgit.com/voltdatalab/graficos/gh-pages/posts/random/prelim/js/d3.custom.js"></script> 
+<script>
+var div = d3.select('#chart').append('div')
+var margin = {
+    top: 20,
+    right: 20,
+    bottom: 30,
+    left: 48
+  },
+  width = 600 - margin.left - margin.right,
+  height = 400 - margin.top - margin.bottom;
+
+var parseDate = d3.time.format("%Y").parse;
+
+var x = d3.time.scale().range([50, width - 200]);
+
+var y = d3.scale.linear().range([height, 0]);
+
+var xAxis = d3.svg.axis()
+.scale(x)
+.orient("bottom")
+.ticks(10)
+.innerTickSize(-height);
+
+var yAxis = d3.svg.axis().scale(y)
+.tickFormat(function(d) { return "" + d + ""; })
+.tickPadding(10)
+.orient("left")
+.ticks(6)
+.innerTickSize(-width + 180);
+
+var line = d3.svg.line().x(function(d) {
+  return x(d.ano);
+}).y(function(d) {
+  return y(d.total);
+});
+var svg = d3.select("#chart")
+.append("svg")
+.attr("viewBox", "0 0 400 400")
+//.attr("width", width + margin.left + margin.right)
+//.attr("height", height + margin.top + margin.bottom)
+.append("g")
+.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var dataFiltered = {}
+var dataNested = {}
+d3.csv("https://docs.google.com/spreadsheets/d/e/2PACX-1vTRIaUYUdLll8tPDTdEd2oqSxyFiSz0HvuL4u7tT2jaQr2BFyUOBgOjfBYhpTtcmO-c9_WPAJc-e9FO/pub?gid=1212090060&single=true&output=csv", function(error, data) {
+  data.forEach(function(d) {
+    d.ano = parseDate(d.ano);
+    //d.ano = d.ano;
+    d.total = +d.total;
+    d.tipo = d.tipo;
+  });
+  var dataNested = d3.nest().key(function(d) {
+    return d.tipo
+  }).entries(data)
+  div.append('select')
+    .attr('id', 'variableSelect')
+    .attr('class', 'caixa')
+    .on('change', variableChange)
+    .selectAll('option')
+    .data(dataNested)
+    .enter()
+    .append('option')
+    .attr('value', function(d) {
+    return d.key
+  }).text(function(d) {
+    return d.key
+  })
+  var dataFiltered = dataNested.filter(function(d) {
+    return d.key === d3.select('#variableSelect')
+      .property('value')
+  })
+  x.domain(d3.extent(dataFiltered[0].values, function(d) {
+    return d.ano;
+  }));
+  y.domain(d3.extent(dataFiltered[0].values, function(d) {
+    return d.total;
+  }));
+  
+  svg.append("g")
+    .attr("class", "xAxis")
+    .attr("transform", "translate(0," + height + ")")
+    .style("fill", "#241f21")
+    .call(xAxis);
+  
+  svg.append("g")
+    .attr("class", "yAxis")
+    .style("fill", "#241f21")
+    .call(yAxis)
+    .append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 6)
+    .attr("dy", ".71em")
+    .style("font-weight", "300")
+    .style("text-anchor", "end")
+    .style("fill", "#777")
+    .text("Incidentes");
+  
+  svg.append("path")
+    .datum(dataFiltered[0].values)
+    .attr("class", "line")
+    //.interpolate("basis")
+    .attr("d", line);
+
+
+  function variableChange() {
+    var value = this.value
+    var dataFiltered = dataNested.filter(function(d) {
+      return d.key === value 
+    })
+    x.domain(d3.extent(dataFiltered[0].values, function(d) {
+      return d.ano;
+    }));
+    y.domain(d3.extent(dataFiltered[0].values, function(d) {
+      return d.total;
+    }));
+    d3.select('.xAxis').transition().duration(1000).call(xAxis)
+    d3.select('.yAxis').transition().duration(1000).call(yAxis)
+    d3.select('.line').datum(dataFiltered[0].values).attr('d', line)
+  }
+});
+</script>
+</body>
+</html>
