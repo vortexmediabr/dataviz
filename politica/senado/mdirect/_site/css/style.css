@@ -1,0 +1,160 @@
+html {
+  font-family: 'Roboto', sans-serif;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+body {
+  margin: 0;
+}
+
+a {
+  font-weight: 700;
+  color: #ADBD30;
+  outline: thin dotted;
+  text-decoration: none;
+  padding: 3px;
+}
+
+a:hover,a:focus {
+  background-color: #ADBD30;
+  color: #fff
+}
+
+a:focus {
+  outline: thin dotted #ADBD30;
+  outline: 5px auto -webkit-focus-ring-color;
+  outline-offset: -2px;
+}
+
+a:active,a:hover {
+  outline: 0;
+}
+
+h1 {
+  font-size: 2em;
+}
+
+h2{
+  font-size: 1em;
+}
+
+h6{
+  float: right;
+}
+
+img_lines {
+  vertical-align: middle;
+}
+
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+
+b,strong {
+  font-weight: bold;
+}
+
+hr {
+  height: 0;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+
+}
+
+.whatever_text{
+  max-width: 700px;
+  margin: 30px 5% 0;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+}
+
+.list li{
+  display: inline-block;
+  width: 33%;
+  max-width: 30%;
+  min-width: 200px;
+  min-height: 230px;
+  margin: 0 20px 40px -10px !important;
+  border: 1px dashed #ADBD30;
+  padding: 20px;
+  border-radius: 5px;
+  vertical-align:top;
+}
+
+.list p{
+  font-weight: 300;
+  font-size: .9em
+}
+
+#tool-list{
+  width: 570px;
+}
+
+#toolSearch{
+  width: 300px;
+  margin: 0;
+  border: 0 0 1px 0;
+  border-bottom: #ADBD30 1px solid
+  padding: 8px;
+}
+
+.tipo_card{
+  padding: 5px 9px;
+  display:inline;
+  color: #fff;
+  border-radius: 5px;
+  font-weight: 400;
+}
+
+.main-search-holder {
+  margin: 0;
+  max-width: 700px
+}
+
+/* CORES EXCLUSIVAS */
+
+.privacidade {
+  background-color: #1398DB;
+}
+
+.documentos.compartilhados {
+  background-color: #FCCB0A;
+}
+
+.uso.geral{
+  background-color: #A04316;
+}
+
+.extração.de.dados{
+  background-color: #F57017;
+}
+
+.análise.de.dados{
+  background-color: #E81E22;
+}
+
+.aprendizagem {
+  background-color: #19642A;
+}
+
+
+@media (max-width:768px) {
+  .list li{
+    display: inline-block;
+    min-width: 43%;
+    min-height: 100%;
+    margin: 0 10px 40px 10px !important;
+    border: 1px dashed #ADBD30;
+    padding: 20px;
+    border-radius: 5px;
+    vertical-align:top;
+  }
+  h6{
+    float: none;
+    padding-bottom: 50px;
+  }
+}
